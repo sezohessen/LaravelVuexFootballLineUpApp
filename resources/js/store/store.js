@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import axios from "axios";
-import router from 'vue-router'; // Import the Vue Router instance
+import router from "vue-router"; // Import the Vue Router instance
 export const store = createStore({
     state: {
         players: [],
@@ -8,8 +8,8 @@ export const store = createStore({
         defenders: [],
         midfielders: [],
         attackers: [],
-        lines:[],
-        forms:[],
+        lines: [],
+        forms: [],
         playerPositionEnum: [
             "Goalkeeper",
             "Defender",
@@ -17,14 +17,14 @@ export const store = createStore({
             "Attacker",
         ],
         validationErrors: [],
-        SuccessMessage: "",
+        successMessage: "",
     },
     getters: {
         allPlayers: (state) => state.players,
         players: (state) => state.players,
         playerPositionEnum: (state) => state.playerPositionEnum,
         validationErrors: (state) => state.validationErrors,
-        SuccessMessage: (state) => state.SuccessMessage,
+        successMessage: (state) => state.successMessage,
         lines: (state) => state.lines,
         forms: (state) => state.forms,
         goalkeepers: (state) => state.goalkeepers,
@@ -41,12 +41,24 @@ export const store = createStore({
             });
             state.players = players;
         },
-        setLines: (state, lines) => {state.lines = lines},
-        setForms: (state, forms) => {state.forms = forms},
-        setGoalKeepers: (state, goalkeepers) => {state.goalkeepers = goalkeepers},
-        setDefenders: (state, defenders) => {state.defenders = defenders},
-        setMidfielders: (state, midfielders) => {state.midfielders = midfielders},
-        setAttackers: (state, attackers) => {state.attackers = attackers},
+        setLines: (state, lines) => {
+            state.lines = lines;
+        },
+        setForms: (state, forms) => {
+            state.forms = forms;
+        },
+        setGoalKeepers: (state, goalkeepers) => {
+            state.goalkeepers = goalkeepers;
+        },
+        setDefenders: (state, defenders) => {
+            state.defenders = defenders;
+        },
+        setMidfielders: (state, midfielders) => {
+            state.midfielders = midfielders;
+        },
+        setAttackers: (state, attackers) => {
+            state.attackers = attackers;
+        },
         addPlayer: (state, newPlayer) => {
             state.players.unshift(newPlayer); //Add to the front
         },
@@ -59,20 +71,16 @@ export const store = createStore({
             );
         },
         deleteFormLineUp: (state, formId) => {
-            state.forms = state.forms.filter(
-                (form) => form.id !== formId
-            );
+            state.forms = state.forms.filter((form) => form.id !== formId);
         },
         deleteLineUp: (state, lineId) => {
-            state.lines = state.lines.filter(
-                (line) => line.id !== lineId
-            );
+            state.lines = state.lines.filter((line) => line.id !== lineId);
         },
         setValidationErrors: (state, errors) => {
             state.validationErrors = Object.values(errors).flat();
         },
         setSSuccessMessage: (state, messages) => {
-            state.SuccessMessage = messages;
+            state.successMessage = messages;
         },
     },
     actions: {
@@ -110,8 +118,8 @@ export const store = createStore({
                 const response = await axios.post("/api/player", playerData);
                 console.log(response);
                 commit("addPlayer", response.data);
-                const SuccessMessage = "New player has been added successfully";
-                commit("setSSuccessMessage", SuccessMessage);
+                const successMessage = "New player has been added successfully";
+                commit("setSSuccessMessage", successMessage);
             } catch (error) {
                 console.log(error.response);
                 if (error.response && error.response.status === 422) {
@@ -125,8 +133,9 @@ export const store = createStore({
                 const response = await axios.post("/api/lines", data);
                 console.log(response);
                 commit("newLineUp", response.data);
-                const SuccessMessage = "New Lineup form has been added successfully";
-                commit("setSSuccessMessage", SuccessMessage);
+                const successMessage =
+                    "New Lineup form has been added successfully";
+                commit("setSSuccessMessage", successMessage);
             } catch (error) {
                 console.log(error.response);
                 if (error.response && error.response.status === 422) {
@@ -175,8 +184,8 @@ export const store = createStore({
             try {
                 const response = await axios.delete(`/api/player/${id}`, data);
                 commit("deletePlayer", id);
-                const SuccessMessage = "Player has been deleted successfully";
-                commit("setSSuccessMessage", SuccessMessage);
+                const successMessage = "Player has been deleted successfully";
+                commit("setSSuccessMessage", successMessage);
             } catch (error) {
                 console.log(error.response);
                 // Handle any errors, if needed
@@ -190,8 +199,8 @@ export const store = createStore({
             try {
                 const response = await axios.delete(`/api/lines/${id}`, data);
                 commit("deleteLineUp", id);
-                const SuccessMessage = "Player has been deleted successfully";
-                commit("setSSuccessMessage", SuccessMessage);
+                const successMessage = "Player has been deleted successfully";
+                commit("setSSuccessMessage", successMessage);
             } catch (error) {
                 console.log(error.response);
                 // Handle any errors, if needed
@@ -203,10 +212,13 @@ export const store = createStore({
         },
         async deleteFormLineUp({ commit }, { id, data }) {
             try {
-                const response = await axios.delete(`/api/formation/${id}`, data);
+                const response = await axios.delete(
+                    `/api/formation/${id}`,
+                    data
+                );
                 commit("deleteFormLineUp", id);
-                const SuccessMessage = "Player has been deleted successfully";
-                commit("setSSuccessMessage", SuccessMessage);
+                const successMessage = "Player has been deleted successfully";
+                commit("setSSuccessMessage", successMessage);
             } catch (error) {
                 console.log(error.response);
                 // Handle any errors, if needed

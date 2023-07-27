@@ -8,8 +8,8 @@
                 <li v-for="error in validationErrors" :key="error">{{ error }}</li>
             </ul>
         </div>
-        <div v-if="SuccessMessage" class="success-container">
-            <span>{{ SuccessMessage }}</span>
+        <div v-if="successMessage" class="success-container">
+            <span>{{ successMessage }}</span>
         </div>
         <div class="players-table">
             <table>
@@ -48,8 +48,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import LineUpPopup from './LineUp/LineUpPopup.vue';
-import pagination from './PaginationComponent.vue';
+import LineUpPopup from '../LineUp/LineUpPopup.vue';
+import pagination from '../PaginationComponent.vue';
 export default {
     components: {
         pagination,
@@ -64,7 +64,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['lines','validationErrors', 'SuccessMessage']),
+        ...mapGetters(['lines','validationErrors', 'successMessage']),
         lines() {
             return this.$store.state.lines;
         },

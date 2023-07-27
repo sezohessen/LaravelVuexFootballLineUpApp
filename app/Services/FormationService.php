@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Formation;
 use App\Models\Line;
+use Illuminate\Support\Facades\DB;
 
 class FormationService
 {
@@ -14,49 +15,50 @@ class FormationService
     }
     public function store($request)
     {
+        DB::beginTransaction();
         try {
-            $selectedLine   = collect($request->selectedLine);
-            $line = Line::findOrFail($selectedLine['id']);
+            $selectedLine = Line::findOrFail($request->selectedLine['id']);
+
+            $formation = Formation::create(['line_id' => $selectedLine->id]);
+
             $selectedPlayers = collect($request->selectedPlayers);
-            for ($i=0; $i < $line->no_defenders; $i++) {
-                $defender = $selectedPlayers['defender' . $i + 1];
-            }
-            for ($i=0; $i < $line->no_midfielders; $i++) {
-                $midfielder = $selectedPlayers['midfielder' . $i + 1];
-            }
-            for ($i=0; $i < $line->no_attackers; $i++) {
-                $attacker = $selectedPlayers['attacker' . $i + 1];
-            }
-            $formation = Formation::create([
-                'line_id'   => $line->id,
-            ]);
-            $goalkeeper = $selectedPlayers['goalkeeper'];
+
+            // Create the goalkeeper record
             $formation->formation_player()->create([
-                'player_id' => $goalkeeper['id']
+                'player_id' => $selectedPlayers['goalkeeper']['id']
             ]);
-            for ($i=0; $i < $line->no_defenders; $i++) {
-                $defender = $selectedPlayers['defender' . $i + 1];
+
+            // Create defenders
+            for ($i = 1; $i <= $selectedLine->no_defenders; $i++) {
+                $defender = $selectedPlayers['defender' . $i];
                 $formation->formation_player()->create([
                     'player_id' => $defender['id']
                 ]);
             }
-            for ($i=0; $i < $line->no_midfielders; $i++) {
-                $midfielder = $selectedPlayers['midfielder' . $i + 1];
+
+            // Create midfielders
+            for ($i = 1; $i <= $selectedLine->no_midfielders; $i++) {
+                $midfielder = $selectedPlayers['midfielder' . $i];
                 $formation->formation_player()->create([
                     'player_id' => $midfielder['id']
                 ]);
             }
-            for ($i=0; $i < $line->no_attackers; $i++) {
-                $attacker = $selectedPlayers['attacker' . $i + 1];
+
+            // Create attackers
+            for ($i = 1; $i <= $selectedLine->no_attackers; $i++) {
+                $attacker = $selectedPlayers['attacker' . $i];
                 $formation->formation_player()->create([
                     'player_id' => $attacker['id']
                 ]);
             }
+
+            DB::commit();
+            return response()->json('Success', 201);
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e);
             return response()->json('Failed', 401);
         }
-        return response()->json('Success', 201);
     }
     public function add($request)
     {

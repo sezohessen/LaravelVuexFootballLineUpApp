@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import NotFound from "../components/NotFound.vue";
-import Player from "../components/Player.vue";
-import Lines from "../components/Lines.vue";
-import Formations from "../components/Formations.vue";
+import Player from "../components/Player/index.vue";
+import Lines from "../components/LineUp/Lines.vue";
+import Formations from "../components/Formation/Formations.vue";
 import CreateForm from "../components/Formation/CreateForm.vue";
 import DefaultLayout from '../layout/Layout.vue';
 const routes = [
